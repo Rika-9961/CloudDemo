@@ -6,10 +6,12 @@ import com.hitwh.dto.vo.CourseVO;
 import com.hitwh.entity.Course;
 import com.hitwh.entity.Staff;
 import com.hitwh.entity.enumeration.CourseType;
+import com.hitwh.feign.StaffFeignClient;
 import com.hitwh.repository.CourseRepository;
 import com.hitwh.service.CourseService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,7 +28,10 @@ public class CourseServiceImpl implements CourseService {
     @Resource
     private CourseRepository courseRepository;
     @Resource
-    private StaffRepository staffRepository;
+    private StaffFeignClient staffFeignClient;
+
+    @Resource
+    private ModelMapper modelMapper;
 
     @Override
     public CourseListVO searchCourse(String name, CourseType courseType, Pageable pageable) {
@@ -70,7 +75,8 @@ public class CourseServiceImpl implements CourseService {
     public CourseVO addCourse(CourseDTO course) {
         List<Staff> teachers = new ArrayList<>();
         for(Long i : course.getTeacherId()) {
-            staffRepository.findByIdAndDeletedFalse(i).ifPresent(teachers::add);
+            Optional.ofNullable(modelMapper.map(staffFeignClient.show(i), Staff.class)).ifPresent(teachers::add);
+//            staffRepository.findByIdAndDeletedFalse(i).ifPresent(teachers::add);
         }
         Course addCourse = new Course();
         addCourse.setName(course.getName());
@@ -107,7 +113,7 @@ public class CourseServiceImpl implements CourseService {
         Optional.ofNullable(updateCourse.getCapacity()).ifPresent(course::setCapacity);
         List<Staff> teachers = new ArrayList<>();
         for(Long i : updateCourse.getTeacherId()) {
-            staffRepository.findByIdAndDeletedFalse(i).ifPresent(teachers::add);
+            Optional.ofNullable(modelMapper.map(staffFeignClient.show(i), Staff.class)).ifPresent(teachers::add);
         }
         course.setTeachers(teachers);
         course.setLastTime(LocalDateTime.now());

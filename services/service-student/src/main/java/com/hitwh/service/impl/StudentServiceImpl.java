@@ -3,13 +3,16 @@ package com.hitwh.service.impl;
 import com.hitwh.dto.pojo.StudentDTO;
 import com.hitwh.dto.vo.StudentListVO;
 import com.hitwh.dto.vo.StudentVO;
+import com.hitwh.entity.Class;
 import com.hitwh.entity.Student;
 import com.hitwh.entity.enumeration.EducationBackgroundType;
+import com.hitwh.feign.ClassFeignClient;
 import com.hitwh.repository.StudentRepository;
 import com.hitwh.service.StudentService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 @Slf4j
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -27,7 +31,10 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
 
     @Resource
-    private ClassRepository classRepository;
+    private ClassFeignClient classFeignClient;
+
+    @Resource
+    private ModelMapper modelMapper;
 
     @Override
     public StudentListVO searchStudent(String name, String studentId, String className, EducationBackgroundType educationBackground, Pageable pageable) {
@@ -39,7 +46,7 @@ public class StudentServiceImpl implements StudentService {
             if (StringUtils.hasText(studentId)) {
                 predicates.add(criteriaBuilder.like(root.get("studentId"), "%" + studentId + "%"));
             }
-            if(StringUtils.hasText(className)) {
+            if (StringUtils.hasText(className)) {
                 predicates.add(criteriaBuilder.equal(root.join("clazz").get("name"), className));
             }
             Optional.ofNullable(educationBackground)
@@ -76,7 +83,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void deleteAllStudent(List<Long> ids) {
         List<Student> students = studentRepository.findAllByIdInAndDeletedFalse(ids);
-        for(Student student: students) {
+        for (Student student : students) {
             student.setDeleted(true);
             student.setLastTime(LocalDateTime.now());
         }
@@ -89,19 +96,20 @@ public class StudentServiceImpl implements StudentService {
         student.setEducationBackground(addStudent.getEducationBackground());
         student.setName(addStudent.getName());
         student.setSex(addStudent.getSex());
-        if(studentRepository.existsByStudentIdAndDeletedFalse(addStudent.getStudentId())) {
+        if (studentRepository.existsByStudentIdAndDeletedFalse(addStudent.getStudentId())) {
             log.info("学号重复");
             throw new RuntimeException("学号已重复");
         } else {
             student.setStudentId(addStudent.getStudentId());
         }
-        if(studentRepository.existsByPhoneAndDeletedFalse(addStudent.getPhone())) {
+        if (studentRepository.existsByPhoneAndDeletedFalse(addStudent.getPhone())) {
             log.info("手机号重复重复");
             throw new RuntimeException("手机号已重复");
         } else {
             student.setPhone(addStudent.getPhone());
         }
-        classRepository.findByIdAndDeletedFalse(addStudent.getClassId()).ifPresent(student::setClazz);
+        Optional.ofNullable(modelMapper.map(classFeignClient.show(addStudent.getClassId()), Class.class)).ifPresent(student::setClazz);
+//        classRepository.findByIdAndDeletedFalse(addStudent.getClassId()).ifPresent(student::setClazz);
         student.setLastTime(LocalDateTime.now());
         Optional<Student> optional = studentRepository.findByNameAndDeletedFalse(student.getName());
         if (optional.isPresent()) {
@@ -120,17 +128,18 @@ public class StudentServiceImpl implements StudentService {
         Optional.ofNullable(updateStudent.getName()).ifPresent(student::setName);
         Optional.ofNullable(updateStudent.getEducationBackground()).ifPresent(student::setEducationBackground);
         Optional.ofNullable(updateStudent.getSex()).ifPresent(student::setSex);
-        if(studentRepository.existsByIdNotAndPhoneAndDeletedFalse(updateStudent.getId(), updateStudent.getStudentId())) {
+        if (studentRepository.existsByIdNotAndPhoneAndDeletedFalse(updateStudent.getId(), updateStudent.getStudentId())) {
             throw new RuntimeException("学号已重复");
         } else {
             Optional.ofNullable(updateStudent.getStudentId()).ifPresent(student::setStudentId);
         }
-        if(studentRepository.existsByIdNotAndStudentIdAndDeletedFalse(updateStudent.getId(), updateStudent.getPhone())) {
+        if (studentRepository.existsByIdNotAndStudentIdAndDeletedFalse(updateStudent.getId(), updateStudent.getPhone())) {
             throw new RuntimeException("学号已重复");
         } else {
             Optional.ofNullable(updateStudent.getPhone()).ifPresent(student::setPhone);
         }
-        classRepository.findByIdAndDeletedFalse(updateStudent.getClassId()).ifPresent(student::setClazz);
+        Optional.ofNullable(modelMapper.map(classFeignClient.show(updateStudent.getClassId()), Class.class)).ifPresent(student::setClazz);
+//        classRepository.findByIdAndDeletedFalse(updateStudent.getClassId()).ifPresent(student::setClazz);
         student.setLastTime(LocalDateTime.now());
         return new StudentVO(studentRepository.save(student));
     }

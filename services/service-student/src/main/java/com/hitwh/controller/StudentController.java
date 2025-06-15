@@ -1,11 +1,11 @@
 package com.hitwh.controller;
 
-import com.webdemo.controller.pojo.StudentDTO;
-import com.webdemo.controller.pojo.StudentListDTO;
-import com.webdemo.controller.vo.StudentListVO;
-import com.webdemo.controller.vo.StudentVO;
-import com.webdemo.entity.Student;
-import com.webdemo.service.StudentService;
+import com.hitwh.dto.pojo.StudentDTO;
+import com.hitwh.dto.pojo.StudentListDTO;
+import com.hitwh.dto.vo.StudentListVO;
+import com.hitwh.dto.vo.StudentVO;
+import com.hitwh.entity.Student;
+import com.hitwh.service.StudentService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
