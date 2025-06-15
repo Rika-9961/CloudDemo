@@ -11,14 +11,14 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>service-order</module>
         <module>service-student</module>
         <module>service-course</module>
-        <module>service-selection</module>
-        <module>service-grade</module>
-        <module>service-teacher</module>
         <module>api-gateway</module>
         <module>common</module>
+        <module>service-login</module>
+        <module>service-class</module>
+        <module>service-department</module>
+        <module>service-staff</module>
     </modules>
 
     <artifactId>services</artifactId>
@@ -48,6 +48,10 @@
                 <groupId>com.auth0</groupId>
                 <artifactId>java-jwt</artifactId>
                 <version>4.5.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
             </dependency>
         </dependencies>
 

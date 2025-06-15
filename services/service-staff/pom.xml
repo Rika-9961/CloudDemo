@@ -10,6 +10,13 @@
     </parent>
 
     <artifactId>service-staff</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>com.hitwh</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
