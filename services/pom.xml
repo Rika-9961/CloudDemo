@@ -11,14 +11,14 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>service-student</module>
-        <module>service-course</module>
         <module>api-gateway</module>
         <module>common</module>
-        <module>service-login</module>
         <module>service-class</module>
+        <module>service-course</module>
         <module>service-department</module>
+        <module>service-login</module>
         <module>service-staff</module>
+        <module>service-student</module>
     </modules>
 
     <artifactId>services</artifactId>
