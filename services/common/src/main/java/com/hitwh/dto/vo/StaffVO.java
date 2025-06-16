@@ -16,7 +16,7 @@ public class StaffVO implements Serializable {
     Long id;
     String name;
     String staffId;
-    String picture;
+//    String picture;
     String sex;
     StaffType job;
     LocalDate start;
@@ -28,7 +28,7 @@ public class StaffVO implements Serializable {
         this.id = staff.getId();
         this.name = staff.getName();
         this.staffId = staff.getStaffId();
-        this.picture = staff.getPicture();
+//        this.picture = staff.getPicture();
         this.sex = staff.getSex();
         this.job = staff.getJob();
         this.start = staff.getStart();

@@ -94,7 +94,7 @@ public class StaffServiceImpl implements StaffService {
         Staff staff = optional.get();
         Optional.ofNullable(updateStaff.getName()).ifPresent(staff::setName);
         Optional.ofNullable(updateStaff.getStaffId()).ifPresent(staff::setStaffId);
-        Optional.ofNullable(updateStaff.getPicture()).ifPresent(staff::setPicture);
+//        Optional.ofNullable(updateStaff.getPicture()).ifPresent(staff::setPicture);
         Optional.ofNullable(updateStaff.getSex()).ifPresent(staff::setSex);
         Optional.ofNullable(updateStaff.getJob()).ifPresent(staff::setJob);
         Optional.ofNullable(updateStaff.getStart()).ifPresent(staff::setStart);

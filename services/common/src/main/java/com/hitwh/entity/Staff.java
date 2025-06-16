@@ -32,8 +32,8 @@ public class Staff implements Serializable {
     @Column(name = "staff_id", nullable = false, unique = true)
     private String staffId;
 
-    @Column(name = "picture")
-    private String picture;
+//    @Column(name = "picture")
+//    private String picture;
 
     @Column(name = "sex", nullable = false)
     private String sex;

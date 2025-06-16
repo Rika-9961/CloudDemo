@@ -1,6 +1,6 @@
 # gateway port
 server:
-  port: 8080
+  port: 9080
 
 spring:
   application:
@@ -12,6 +12,8 @@ spring:
       config:
         server-addr: localhost:8848
         file-extension: yaml
+        import-check:
+            enabled: false
     gateway:
       routes:
         - id: service-student
