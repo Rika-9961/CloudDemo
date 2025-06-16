@@ -1,9 +1,9 @@
 server:
-  port: 8130
+  port: 8120
 
 spring:
   application:
-    name: service-student
+    name: service-staff
   datasource:
     url: jdbc:mysql://localhost:3306/cloud_demo?useSSL=false
     username: root
