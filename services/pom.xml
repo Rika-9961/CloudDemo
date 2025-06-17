@@ -19,7 +19,6 @@
         <module>service-login</module>
         <module>service-staff</module>
         <module>service-student</module>
-        <module>gateway</module>
     </modules>
 
     <artifactId>services</artifactId>

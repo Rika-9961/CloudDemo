@@ -14,7 +14,27 @@ spring:
           enabled: false
     gateway:
       routes:
+        - id: service-class
+          uri: lb://service-student
+          predicates:
+            - Path=/classes/**
+        - id: service-course
+          uri: lb://service-course
+          predicates:
+            - Path=/course/**
+        - id: service-department
+          uri: lb://service-department
+          predicates:
+            - Path=/department/**
+        - id: service-login
+          uri: lb://service-login
+          predicates:
+            - Path=/api/**
+        - id: service-staff
+          uri: lb://service-staff
+          predicates:
+            - Path=/staff/**
         - id: service-student
           uri: lb://service-student
           predicates:
-            - Path=/api/students/**
+            - Path=/student/**
