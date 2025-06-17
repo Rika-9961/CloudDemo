@@ -57,6 +57,19 @@ public class StaffController {
     }
 
     /**
+     * 查询回显
+     *
+     * @param id 员工id
+     * @return 该id员工信息
+     */
+
+    @GetMapping("/show_staff/{id}")
+    public ResponseEntity<Staff> showStaff(@PathVariable Long id) {
+        Staff staff = staffService.getStaffByIdDirect(id);
+        return ResponseEntity.status(HttpStatus.OK).body(staff);
+    }
+
+    /**
      * 修改员工
      *
      * @param updateStaff 修改员工信息 {@link Staff}

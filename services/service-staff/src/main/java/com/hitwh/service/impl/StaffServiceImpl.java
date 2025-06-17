@@ -55,6 +55,15 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    public Staff getStaffByIdDirect(Long id) {
+        Optional<Staff> optional = staffRepository.findByIdAndDeletedFalse(id);
+        if (optional.isEmpty()) {
+            throw new RuntimeException("查无此人");
+        }
+        return optional.get();
+    }
+
+    @Override
     public void deleteStaff(Long id) {
         Optional<Staff> optional = staffRepository.findByIdAndDeletedFalse(id);
         if (optional.isPresent()) {

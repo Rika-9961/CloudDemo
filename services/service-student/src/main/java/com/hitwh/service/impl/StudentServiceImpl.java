@@ -108,7 +108,7 @@ public class StudentServiceImpl implements StudentService {
         } else {
             student.setPhone(addStudent.getPhone());
         }
-        Optional.ofNullable(modelMapper.map(classFeignClient.show(addStudent.getClassId()), Class.class)).ifPresent(student::setClazz);
+        Optional.ofNullable(classFeignClient.show(addStudent.getClassId()).getBody()).ifPresent(student::setClazz);
 //        classRepository.findByIdAndDeletedFalse(addStudent.getClassId()).ifPresent(student::setClazz);
         student.setLastTime(LocalDateTime.now());
         Optional<Student> optional = studentRepository.findByNameAndDeletedFalse(student.getName());
@@ -138,7 +138,7 @@ public class StudentServiceImpl implements StudentService {
         } else {
             Optional.ofNullable(updateStudent.getPhone()).ifPresent(student::setPhone);
         }
-        Optional.ofNullable(modelMapper.map(classFeignClient.show(updateStudent.getClassId()), Class.class)).ifPresent(student::setClazz);
+        Optional.ofNullable(classFeignClient.show(updateStudent.getClassId()).getBody()).ifPresent(student::setClazz);
 //        classRepository.findByIdAndDeletedFalse(updateStudent.getClassId()).ifPresent(student::setClazz);
         student.setLastTime(LocalDateTime.now());
         return new StudentVO(studentRepository.save(student));
