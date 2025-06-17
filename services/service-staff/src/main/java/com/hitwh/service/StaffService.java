@@ -15,6 +15,8 @@ public interface StaffService {
 
     StaffVO getStaffById(Long id);
 
+    Staff getStaffByIdDirect(Long id);
+
     void deleteStaff(Long id);
     void deleteAllStaff(List<Long> ids);
 

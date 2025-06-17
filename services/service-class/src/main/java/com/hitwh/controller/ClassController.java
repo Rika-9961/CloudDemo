@@ -5,6 +5,7 @@ import com.hitwh.dto.pojo.ClassDTO;
 import com.hitwh.dto.pojo.ClassListDTO;
 import com.hitwh.dto.vo.ClassListVO;
 import com.hitwh.dto.vo.ClassVO;
+import com.hitwh.entity.Class;
 import com.hitwh.service.ClassService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,19 @@ public class ClassController {
     @GetMapping("/show/{id}")
     public ResponseEntity<ClassVO> show(@PathVariable Long id) {
         ClassVO classes = classService.getClassById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(classes);
+    }
+
+    /**
+     * 跨服查询回显
+     *
+     * @param id 班级id
+     * @return 该id班级信息
+     */
+
+    @GetMapping("/show_class/{id}")
+    public ResponseEntity<Class> showClass(@PathVariable Long id) {
+        Class classes = classService.getClassByIdDirect(id);
         return ResponseEntity.status(HttpStatus.OK).body(classes);
     }
 

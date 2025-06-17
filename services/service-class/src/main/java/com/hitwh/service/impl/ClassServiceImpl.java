@@ -66,6 +66,15 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
+    public Class getClassByIdDirect(Long id) {
+        Optional<Class> optional = classRepository.findByIdAndDeletedFalse(id);
+        if (optional.isEmpty()) {
+            throw new RuntimeException("查无此人");
+        }
+        return optional.get();
+    }
+
+    @Override
     public void deleteClass(Long id) {
         Optional<Class> optional = classRepository.findByIdAndDeletedFalse(id);
         if (optional.isPresent()) {
