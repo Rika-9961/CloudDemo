@@ -1,5 +1,6 @@
 package com.hitwh.service.impl;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.hitwh.dto.pojo.CourseDTO;
 import com.hitwh.dto.vo.CourseListVO;
 import com.hitwh.dto.vo.CourseVO;
@@ -71,11 +72,13 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
+    @SentinelResource(value = "addCourse")
     @Override
     public CourseVO addCourse(CourseDTO course) {
         List<Staff> teachers = new ArrayList<>();
-        for(Long i : course.getTeacherId()) {
-            Optional.ofNullable(modelMapper.map(staffFeignClient.show(i), Staff.class)).ifPresent(teachers::add);
+        for (Long i : course.getTeacherId()) {
+            Optional.ofNullable(modelMapper.map(staffFeignClient.show(i), Staff.class)).ifPresent(
+                    teachers::add);
 //            staffRepository.findByIdAndDeletedFalse(i).ifPresent(teachers::add);
         }
         Course addCourse = new Course();
@@ -96,6 +99,7 @@ public class CourseServiceImpl implements CourseService {
         return new CourseVO(courseRepository.save(addCourse));
     }
 
+    @SentinelResource(value = "updateCourse")
     @Override
     public CourseVO updateCourse(CourseDTO updateCourse) {
         Optional<Course> optional = courseRepository.findByIdAndDeletedFalse(updateCourse.getId());
@@ -112,13 +116,15 @@ public class CourseServiceImpl implements CourseService {
         Optional.ofNullable(updateCourse.getCreditHour()).ifPresent(course::setCreditHour);
         Optional.ofNullable(updateCourse.getCapacity()).ifPresent(course::setCapacity);
         List<Staff> teachers = new ArrayList<>();
-        for(Long i : updateCourse.getTeacherId()) {
-            Optional.ofNullable(modelMapper.map(staffFeignClient.show(i), Staff.class)).ifPresent(teachers::add);
+        for (Long i : updateCourse.getTeacherId()) {
+            Optional.ofNullable(modelMapper.map(staffFeignClient.show(i), Staff.class)).ifPresent(
+                    teachers::add);
         }
         course.setTeachers(teachers);
         course.setLastTime(LocalDateTime.now());
         return new CourseVO(courseRepository.save(course));
     }
+
     @Override
     public Integer getTotalNumber() {
         return courseRepository.findAllByDeletedFalse().size();

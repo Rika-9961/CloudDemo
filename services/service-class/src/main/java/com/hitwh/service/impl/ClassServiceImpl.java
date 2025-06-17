@@ -107,6 +107,7 @@ public class ClassServiceImpl implements ClassService {
         return new ClassVO(classRepository.save(clazz));
     }
 
+    @SentinelResource(value = "updateClass")
     @Override
     public ClassVO updateClass(ClassDTO updateClass) {
         Optional<Class> optional = classRepository.findByIdAndDeletedFalse(updateClass.getId());

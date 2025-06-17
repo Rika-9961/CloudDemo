@@ -25,6 +25,10 @@ spring:
         dashboard: localhost:8858
       eager: true
 
+feign:
+  sentinel:
+    enabled: true
+
 # JWT配置
 jwt:
   secret: student-management-secret-key-2024
