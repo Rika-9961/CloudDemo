@@ -1,6 +1,7 @@
 package com.hitwh.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hitwh.entity.enumeration.EducationBackgroundType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -57,6 +58,7 @@ public class Student implements Serializable {
     @JoinColumn(name = "class_id")
     private Class clazz;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "student_course",
             joinColumns = {@JoinColumn(name = "student_id", nullable = false, referencedColumnName = "id")},

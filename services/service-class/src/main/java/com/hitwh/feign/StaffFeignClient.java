@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(value = "service-staff")
+@FeignClient(value = "service-staff", fallback = StaffFallBack.class)
 public interface StaffFeignClient {
     /**
      * 根据员工ID查询员工信息

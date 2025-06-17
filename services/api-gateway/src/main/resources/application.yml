@@ -7,42 +7,41 @@ spring:
     name: api-gateway
   cloud:
     nacos:
-      discovery:
-        server-addr: localhost:8848
-      config:
-        server-addr: localhost:8848
-        file-extension: yaml
-        import-check:
-            enabled: false
-    gateway:
-      routes:
-        - id: service-student
-          uri: lb://service-student
-          predicates:
-            - Path=/api/students/**
-          filters:
-            - StripPrefix=1
-        - id: service-course
-          uri: lb://service-course
-          predicates:
-            - Path=/api/courses/**
-          filters:
-            - StripPrefix=1
-        - id: service-selection
-          uri: lb://service-selection
-          predicates:
-            - Path=/api/selections/**
-          filters:
-            - StripPrefix=1
-        - id: service-grade
-          uri: lb://service-grade
-          predicates:
-            - Path=/api/grades/**
-          filters:
-            - StripPrefix=1
-        - id: service-teacher
-          uri: lb://service-teacher
-          predicates:
-            - Path=/api/teachers/**
-          filters:
-            - StripPrefix=1
+      server-addr: localhost:8848
+#      config:
+#        server-addr: localhost:8848
+#        file-extension: yaml
+#        import-check:
+#            enabled: false
+#    gateway:
+#      routes:
+#        - id: service-student
+#          uri: lb://service-student
+#          predicates:
+#            - Path=/api/students/**
+#          filters:
+#            - StripPrefix=1
+#        - id: service-course
+#          uri: lb://service-course
+#          predicates:
+#            - Path=/api/courses/**
+#          filters:
+#            - StripPrefix=1
+#        - id: service-selection
+#          uri: lb://service-selection
+#          predicates:
+#            - Path=/api/selections/**
+#          filters:
+#            - StripPrefix=1
+#        - id: service-grade
+#          uri: lb://service-grade
+#          predicates:
+#            - Path=/api/grades/**
+#          filters:
+#            - StripPrefix=1
+#        - id: service-teacher
+#          uri: lb://service-teacher
+#          predicates:
+#            - Path=/api/teachers/**
+#          filters:
+#            - StripPrefix=1

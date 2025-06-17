@@ -1,5 +1,6 @@
 package com.hitwh.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,6 +41,7 @@ public class Class implements Serializable {
     @JoinColumn(name = "teacher_id", nullable = false, referencedColumnName = "id")
     private Staff teacher;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Student> students = new ArrayList<>();
 

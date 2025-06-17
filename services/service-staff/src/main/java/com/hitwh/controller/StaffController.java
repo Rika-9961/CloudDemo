@@ -64,8 +64,9 @@ public class StaffController {
      */
 
     @GetMapping("/show_staff/{id}")
-    public ResponseEntity<Staff> showStaff(@PathVariable Long id) {
+    public ResponseEntity<Staff> showStaff(@PathVariable Long id) throws InterruptedException {
         Staff staff = staffService.getStaffByIdDirect(id);
+//        Thread.sleep(2000000);
         return ResponseEntity.status(HttpStatus.OK).body(staff);
     }
 

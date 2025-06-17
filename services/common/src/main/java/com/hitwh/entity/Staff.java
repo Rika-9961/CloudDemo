@@ -1,6 +1,7 @@
 package com.hitwh.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hitwh.entity.enumeration.StaffType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -52,6 +53,7 @@ public class Staff implements Serializable {
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "teachers", fetch = FetchType.EAGER)
     private List<Course> courses  = new ArrayList<>();
 

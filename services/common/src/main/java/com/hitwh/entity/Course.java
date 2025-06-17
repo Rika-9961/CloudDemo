@@ -1,6 +1,7 @@
 package com.hitwh.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hitwh.entity.enumeration.CourseType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -50,12 +51,13 @@ public class Course implements Serializable {
     @Column(name = "capacity", nullable = false)
     private Integer capacity;
 
-
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "course_teacher",
             joinColumns = @JoinColumn(name = "course_id", nullable = false))
     private List<Staff> teachers = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER)
     private List<Student> students = new ArrayList<>();
 
