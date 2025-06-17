@@ -1,6 +1,6 @@
 # gateway port
 server:
-  port: 9080
+  port: 80
 
 spring:
   application:
@@ -10,39 +10,31 @@ spring:
       discovery:
         server-addr: localhost:8848
       config:
-        server-addr: localhost:8848
-        file-extension: yaml
         import-check:
           enabled: false
     gateway:
       routes:
-        - id: service-student
+        - id: service-class
           uri: lb://service-student
           predicates:
-            - Path=/api/students/**
-          filters:
-            - StripPrefix=1
+            - Path=/classes/**
         - id: service-course
           uri: lb://service-course
           predicates:
-            - Path=/api/courses/**
-          filters:
-            - StripPrefix=1
-        - id: service-selection
-          uri: lb://service-selection
+            - Path=/course/**
+        - id: service-department
+          uri: lb://service-department
           predicates:
-            - Path=/api/selections/**
-          filters:
-            - StripPrefix=1
-        - id: service-grade
-          uri: lb://service-grade
+            - Path=/department/**
+        - id: service-login
+          uri: lb://service-login
           predicates:
-            - Path=/api/grades/**
-          filters:
-            - StripPrefix=1
-        - id: service-teacher
-          uri: lb://service-teacher
+            - Path=/api/**
+        - id: service-staff
+          uri: lb://service-staff
           predicates:
-            - Path=/api/teachers/**
-          filters:
-            - StripPrefix=1
+            - Path=/staff/**
+        - id: service-student
+          uri: lb://service-student
+          predicates:
+            - Path=/student/**
