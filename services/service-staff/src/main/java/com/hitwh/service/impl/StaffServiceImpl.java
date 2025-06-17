@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class StaffServiceImpl implements StaffService {
@@ -60,6 +61,11 @@ public class StaffServiceImpl implements StaffService {
         if (optional.isEmpty()) {
             throw new RuntimeException("查无此人");
         }
+//        try {
+//            TimeUnit.MILLISECONDS.sleep(900L);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
         return optional.get();
     }
 

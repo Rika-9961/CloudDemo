@@ -1,5 +1,6 @@
 package com.hitwh.service.impl;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.hitwh.entity.Department;
 import com.hitwh.repository.DepartmentRepository;
 import com.hitwh.service.DepartmentService;
@@ -16,6 +17,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     private DepartmentRepository departmentRepository;
 
 
+    @SentinelResource(value = "getAllDept")
+    @Override
     public List<Department> getAllDepartments() {
         return departmentRepository.findByDeletedFalse();
     }
@@ -31,7 +34,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     public Department updateDepartment(Department updatedDepartment) {
-        Optional<Department> optional = departmentRepository.findByIdAndDeletedFalse(updatedDepartment.getId());
+        Optional<Department> optional = departmentRepository.findByIdAndDeletedFalse(
+                updatedDepartment.getId());
         if (optional.isEmpty()) {
             return null;
         }
@@ -43,7 +47,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     public Department addDepartment(Department department) {
-        Optional<Department> optionalDepartment = departmentRepository.findByNameAndDeletedFalse(department.getName());
+        Optional<Department> optionalDepartment = departmentRepository.findByNameAndDeletedFalse(
+                department.getName());
         if (optionalDepartment.isPresent()) {
             throw new RuntimeException("部门已存在");
         }

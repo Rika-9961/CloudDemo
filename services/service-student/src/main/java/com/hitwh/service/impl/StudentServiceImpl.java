@@ -1,5 +1,6 @@
 package com.hitwh.service.impl;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.hitwh.dto.pojo.StudentDTO;
 import com.hitwh.dto.vo.StudentListVO;
 import com.hitwh.dto.vo.StudentVO;
@@ -36,8 +37,11 @@ public class StudentServiceImpl implements StudentService {
     @Resource
     private ModelMapper modelMapper;
 
+    @SentinelResource(value = "searchStudent")
     @Override
-    public StudentListVO searchStudent(String name, String studentId, String className, EducationBackgroundType educationBackground, Pageable pageable) {
+    public StudentListVO searchStudent(String name, String studentId, String className,
+                                       EducationBackgroundType educationBackground,
+                                       Pageable pageable) {
         Specification<Student> specification = ((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (StringUtils.hasText(name)) {
@@ -53,10 +57,12 @@ public class StudentServiceImpl implements StudentService {
                     .map(ebt -> criteriaBuilder.equal(root.get("educationBackground"), ebt))
                     .ifPresent(predicates::add);
             predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
-            return query.where(criteriaBuilder.and(predicates.toArray(new Predicate[0]))).getRestriction();
+            return query.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])))
+                    .getRestriction();
         });
         long total = studentRepository.count(specification);
-        Page<StudentVO> map = studentRepository.findAll(specification, pageable).map(StudentVO::new);
+        Page<StudentVO> map = studentRepository.findAll(specification, pageable).map(
+                StudentVO::new);
         return new StudentListVO(total, map.getContent());
     }
 
@@ -90,6 +96,7 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.saveAll(students);
     }
 
+    @SentinelResource(value = "addStudent")
     @Override
     public StudentVO addStudent(StudentDTO addStudent) {
         Student student = new Student();
@@ -108,7 +115,8 @@ public class StudentServiceImpl implements StudentService {
         } else {
             student.setPhone(addStudent.getPhone());
         }
-        Optional.ofNullable(classFeignClient.show(addStudent.getClassId()).getBody()).ifPresent(student::setClazz);
+        Optional.ofNullable(classFeignClient.show(addStudent.getClassId()).getBody()).ifPresent(
+                student::setClazz);
 //        classRepository.findByIdAndDeletedFalse(addStudent.getClassId()).ifPresent(student::setClazz);
         student.setLastTime(LocalDateTime.now());
         Optional<Student> optional = studentRepository.findByNameAndDeletedFalse(student.getName());
@@ -120,25 +128,30 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentVO updateStudent(StudentDTO updateStudent) {
-        Optional<Student> optional = studentRepository.findByIdAndDeletedFalse(updateStudent.getId());
+        Optional<Student> optional = studentRepository.findByIdAndDeletedFalse(
+                updateStudent.getId());
         if (optional.isEmpty()) {
             return null;
         }
         Student student = optional.get();
         Optional.ofNullable(updateStudent.getName()).ifPresent(student::setName);
-        Optional.ofNullable(updateStudent.getEducationBackground()).ifPresent(student::setEducationBackground);
+        Optional.ofNullable(updateStudent.getEducationBackground()).ifPresent(
+                student::setEducationBackground);
         Optional.ofNullable(updateStudent.getSex()).ifPresent(student::setSex);
-        if (studentRepository.existsByIdNotAndPhoneAndDeletedFalse(updateStudent.getId(), updateStudent.getStudentId())) {
+        if (studentRepository.existsByIdNotAndPhoneAndDeletedFalse(updateStudent.getId(),
+                updateStudent.getStudentId())) {
             throw new RuntimeException("学号已重复");
         } else {
             Optional.ofNullable(updateStudent.getStudentId()).ifPresent(student::setStudentId);
         }
-        if (studentRepository.existsByIdNotAndStudentIdAndDeletedFalse(updateStudent.getId(), updateStudent.getPhone())) {
+        if (studentRepository.existsByIdNotAndStudentIdAndDeletedFalse(updateStudent.getId(),
+                updateStudent.getPhone())) {
             throw new RuntimeException("学号已重复");
         } else {
             Optional.ofNullable(updateStudent.getPhone()).ifPresent(student::setPhone);
         }
-        Optional.ofNullable(classFeignClient.show(updateStudent.getClassId()).getBody()).ifPresent(student::setClazz);
+        Optional.ofNullable(classFeignClient.show(updateStudent.getClassId()).getBody()).ifPresent(
+                student::setClazz);
 //        classRepository.findByIdAndDeletedFalse(updateStudent.getClassId()).ifPresent(student::setClazz);
         student.setLastTime(LocalDateTime.now());
         return new StudentVO(studentRepository.save(student));

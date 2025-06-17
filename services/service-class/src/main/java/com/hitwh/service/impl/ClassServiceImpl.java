@@ -1,5 +1,6 @@
 package com.hitwh.service.impl;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.hitwh.dto.pojo.ClassDTO;
 import com.hitwh.dto.vo.ClassListVO;
 import com.hitwh.dto.vo.ClassVO;
@@ -36,7 +37,8 @@ public class ClassServiceImpl implements ClassService {
 
 
     @Override
-    public ClassListVO searchClass(String name, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+    public ClassListVO searchClass(String name, LocalDate startDate, LocalDate endDate,
+                                   Pageable pageable) {
         Specification<Class> specification = ((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (StringUtils.hasText(name)) {
@@ -84,9 +86,11 @@ public class ClassServiceImpl implements ClassService {
         }
     }
 
+    @SentinelResource(value = "addClass")
     @Override
     public ClassVO addClass(ClassDTO classes) {
-        Staff staff = modelMapper.map(staffFeignClient.show(classes.getTeacherId()).getBody(), Staff.class);
+        Staff staff = modelMapper.map(staffFeignClient.show(classes.getTeacherId()).getBody(),
+                Staff.class);
         if (staff == null) {
             throw new RuntimeException("老师不存在");
         }
@@ -114,7 +118,9 @@ public class ClassServiceImpl implements ClassService {
         Optional.ofNullable(updateClass.getAddress()).ifPresent(classes::setAddress);
         Optional.ofNullable(updateClass.getStart()).ifPresent(classes::setStart);
         Optional.ofNullable(updateClass.getEnd()).ifPresent(classes::setEnd);
-        Optional.ofNullable(modelMapper.map(staffFeignClient.show(updateClass.getTeacherId()), Staff.class)).ifPresent(classes::setTeacher);
+        Optional.ofNullable(
+                        modelMapper.map(staffFeignClient.show(updateClass.getTeacherId()), Staff.class))
+                .ifPresent(classes::setTeacher);
         return new ClassVO(classRepository.save(classes));
     }
 
