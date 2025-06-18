@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("/staff")
 @FeignClient(value = "service-staff", fallback = StaffFallBack.class)
 public interface StaffFeignClient {
     /**
@@ -17,7 +16,7 @@ public interface StaffFeignClient {
      * @param id 员工ID
      * @return 员工信息
      */
-    @GetMapping("/show_staff/{id}")
+    @GetMapping("/staff/show_staff/{id}")
     ResponseEntity<Staff> show(@PathVariable Long id);
 
 }
