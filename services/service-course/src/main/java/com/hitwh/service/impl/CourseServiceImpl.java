@@ -75,7 +75,7 @@ public class CourseServiceImpl implements CourseService {
     public CourseVO addCourse(CourseDTO course) {
         List<Staff> teachers = new ArrayList<>();
         for(Long i : course.getTeacherId()) {
-            Optional.ofNullable(modelMapper.map(staffFeignClient.show(i), Staff.class)).ifPresent(teachers::add);
+            Optional.ofNullable(staffFeignClient.show(i).getBody()).ifPresent(teachers::add);
 //            staffRepository.findByIdAndDeletedFalse(i).ifPresent(teachers::add);
         }
         Course addCourse = new Course();
@@ -113,7 +113,7 @@ public class CourseServiceImpl implements CourseService {
         Optional.ofNullable(updateCourse.getCapacity()).ifPresent(course::setCapacity);
         List<Staff> teachers = new ArrayList<>();
         for(Long i : updateCourse.getTeacherId()) {
-            Optional.ofNullable(modelMapper.map(staffFeignClient.show(i), Staff.class)).ifPresent(teachers::add);
+            Optional.ofNullable(staffFeignClient.show(i).getBody()).ifPresent(teachers::add);
         }
         course.setTeachers(teachers);
         course.setLastTime(LocalDateTime.now());
