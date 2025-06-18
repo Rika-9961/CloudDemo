@@ -56,7 +56,7 @@ public class CourseServiceImpl implements CourseService {
     public CourseVO getCourseById(Long id) {
         Optional<Course> optional = courseRepository.findByIdAndDeletedFalse(id);
         if (optional.isEmpty()) {
-            throw new RuntimeException("查无此人");
+            throw new RuntimeException("课程不存在");
         }
         return new CourseVO(optional.get());
     }
@@ -76,9 +76,8 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseVO addCourse(CourseDTO course) {
         List<Staff> teachers = new ArrayList<>();
-        for (Long i : course.getTeacherId()) {
-            Optional.ofNullable(modelMapper.map(staffFeignClient.show(i), Staff.class)).ifPresent(
-                    teachers::add);
+        for(Long i : course.getTeacherId()) {
+            Optional.ofNullable(staffFeignClient.show(i).getBody()).ifPresent(teachers::add);
 //            staffRepository.findByIdAndDeletedFalse(i).ifPresent(teachers::add);
         }
         Course addCourse = new Course();
@@ -93,7 +92,7 @@ public class CourseServiceImpl implements CourseService {
         addCourse.setTeachers(teachers);
         Optional<Course> optional = courseRepository.findByNameAndDeletedFalse(addCourse.getName());
         if (optional.isPresent()) {
-            throw new RuntimeException("员工已存在");
+            throw new RuntimeException("课程已存在");
         }
         addCourse.setLastTime(LocalDateTime.now());
         return new CourseVO(courseRepository.save(addCourse));
@@ -116,9 +115,9 @@ public class CourseServiceImpl implements CourseService {
         Optional.ofNullable(updateCourse.getCreditHour()).ifPresent(course::setCreditHour);
         Optional.ofNullable(updateCourse.getCapacity()).ifPresent(course::setCapacity);
         List<Staff> teachers = new ArrayList<>();
-        for (Long i : updateCourse.getTeacherId()) {
-            Optional.ofNullable(modelMapper.map(staffFeignClient.show(i), Staff.class)).ifPresent(
-                    teachers::add);
+        for(Long i : updateCourse.getTeacherId()) {
+            Optional.ofNullable(staffFeignClient.show(i).getBody()).ifPresent(teachers::add);
+
         }
         course.setTeachers(teachers);
         course.setLastTime(LocalDateTime.now());
