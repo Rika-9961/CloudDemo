@@ -2,13 +2,10 @@ server:
   port: 8120
 
 spring:
+  profiles:
+    active: k8s
   application:
     name: service-staff
-  datasource:
-    url: jdbc:mysql://localhost:3306/cloud_demo?allowPublicKeyRetrieval=true&useSSL=false
-    username: root
-    password: "031214"
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,14 +13,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
-    sentinel:
-      transport:
-        dashboard: localhost:8858
-      eager: true
 
 # JWT配置
 jwt:
